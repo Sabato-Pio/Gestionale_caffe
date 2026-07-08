@@ -1,5 +1,7 @@
 {
-    "cassa":0.0,
-    "cassaforte":0.0,
-    "caffe_venduti":0
+    "cassa": 6.099999999999998,
+    "cassaforte": 0.0,
+    "caffe_venduti_totali": 20,
+    "caffe_venduti_oggi": 20,
+    "ultima_data": "2026-07-08"
 }
