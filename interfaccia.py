@@ -1,5 +1,5 @@
 import tkinter as tk
-from gestione_caffe import aggiungi_caffe, addizione, carica_stato, salva_stato
+from gestione_caffe import aggiungi_caffe, addizione, trasferisci_a_cassaforte, carica_stato, salva_stato
 
 
 def avvia_gui():
@@ -8,7 +8,7 @@ def avvia_gui():
 
     finestra = tk.Tk()
     finestra.title("Gestione caffè di MR.S")
-    finestra.geometry("720x400")
+    finestra.geometry("720x500")
     frame_pagina1 = tk.Frame(finestra)
     frame_pagina1.pack(fill="both", expand=True)
 
@@ -102,14 +102,17 @@ def avvia_gui():
     bottone_cassaforte.pack(pady=20)
 
     # LABEL SOLDI CASSA E CASSAFORTE
-    display_cassaforte = tk.Label(frame_pagina2, text="Saldo cassa: 0.00 €", font=("Arial", 12), bg="red")
+    display_cassaforte = tk.Label(frame_pagina2, text="Saldo cassaforte: 0.00 €", font=("Arial", 12), bg="red")
     display_cassaforte.pack(pady=10)
 
     # FUNZIONE PER AGGIORNARE SALDO
     def get_saldo():
         global stato_cassa  # prendiamo lo stato cassa
-        soldi = stato_cassa["cassa"]
-        display_cassaforte.config(text=f"Saldo:{soldi:.2f}€")
+        soldi_cassaforte = stato_cassa["cassaforte"]
+        soldi_cassa = stato_cassa["cassa"]
+        display_cassaforte.config(
+            text=f"Saldo cassaforte: {soldi_cassaforte:.2f}€ | Cassa rimasta: {soldi_cassa:.2f}€"
+        )
 
     # FUNZIONE PER LA HOME
     def vai_alla_home():
@@ -130,5 +133,32 @@ def avvia_gui():
         font=("Helvetica", 12, "bold")
         )
     bottone_home.pack(pady=20)
+
+    # TRASFERIMENTO A CASSAFORTE TRAMITE LABEL
+    # LABEL PER TRASFERIRE A CASSAFORTE
+    label_trasferimento = tk.Label(frame_pagina1, text="Trasferimento a cassaforte", font=("Helvetica", 14, "bold"))
+    label_trasferimento.pack(pady=8)
+    input_trasferisci = tk.Entry(frame_pagina1, width=15)
+    input_trasferisci.pack()
+
+    def scambio_cassaforte(event=None):
+        importo_inserito = input_trasferisci.get()
+        try:
+            soldi_inseriti = float(importo_inserito)
+        except ValueError:
+            print("Errore: devi inserire un importo numerico valido!")
+            return
+
+        global stato_cassa
+        stato_cassa, riuscito = trasferisci_a_cassaforte(stato_cassa, soldi_inseriti)
+        if not riuscito:
+            print("Errore: importo non valido o superiore ai soldi disponibili in cassa!")
+            return
+
+        salva_stato(stato_cassa)
+        aggiorna_display()
+        input_trasferisci.delete(0, tk.END)
+
+    input_trasferisci.bind('<Return>', scambio_cassaforte)
 
     finestra.mainloop()

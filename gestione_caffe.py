@@ -13,6 +13,20 @@ def addizione(stato, aumento):
     stato["cassa"] += aumento
     return stato
 
+# sposta un importo dalla cassa alla cassaforte.
+# restituisce vero se buono, falso se non buono.
+# la piccola tolleranza (EPSILON) serve per gestire le imprecisioni dei numeri
+# decimali (es. 7.1999999999999975 invece di 7.2 esatto) utile per azzerare la cassa
+def trasferisci_a_cassaforte(stato, importo):
+    EPSILON = 1e-9
+    if importo <= 0 or importo > stato["cassa"] + EPSILON:
+        return stato, False
+    stato["cassa"] -= importo
+    if stato["cassa"] < 0:
+        stato["cassa"] = 0.0  # corregge eventuali residui negativi trascurabili
+    stato["cassaforte"] += importo
+    return stato, True
+
 def carica_stato(percorso="dati.json"):
     try:
         with open(percorso, "r", encoding="utf-8") as f:
