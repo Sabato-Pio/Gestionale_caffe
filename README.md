@@ -2,9 +2,10 @@
 Progetto di gestione vendita caffe a 30 centesimi, PRIMO APPROCCIO A PYTHON
 ## Stato del progetto
 IN LAVORAZIONE
->Il progetto per ora permette solo di aggiungere caffè tramite un bottone e l'inserimento dell'importo da tastiera, vanno implementati
->ancora la possibilità di ritorno indietro in caso di errore, il controllo sulla mancanza di centesimi da parte di un cliente(IDEA:scrivere
->una nota affianco così da tenere traccia dei crediti), aggiunta dell'opzione cassaforte e il prelievo dalla cassaforte e dalla cassa.
-
-## Come mai sono state implementate così tante righe in poco tempo?
-Non ero sicuro che l'avrei inserito su github essendo che sto ancora cercando un ciclo di lavoro per i miei progetti
+>Il progetto è a buon punto permette l'inserimento di caffè tramite bottone, o inserendo solo il numero di caffè venduti. 
+>C'è la possibilità di poter trasferire i soldi dalla cassa alla cassaforte e viceversa.
+>Manca la possibilità di tornare indietro in caso di errore(Future implementazioni)
+>Manca la possibilità di controllare uno storico(Future implementazioni)
+>Manca la possibilità di prelevare in maniera definitiva i soldi dalla cassaforte(Future implementazioni)
+>L'interfaccia grafica è un po datata.
+Il progetto in sostanza è già funzionante, ma presenta delle mancanze che lo renderebbero migliore, sopratutto per un miglior uso quotidiano.
