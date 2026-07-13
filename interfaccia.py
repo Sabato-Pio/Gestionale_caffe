@@ -87,32 +87,6 @@ def avvia_gui():
  
     input_n_caffe.bind('<Return>', invio_n_caffe)
 
-        # CREAZIONE LABEL INSERIMENTO N CAFFÈ
-    scritta_n_caffe = tk.Label(frame_pagina1, text="Aggiungi più caffè insieme", font=("Helvetica", 14, "bold"))
-    scritta_n_caffe.pack(pady=8)
-    input_n_caffe = tk.Entry(frame_pagina1, width=15)
-    input_n_caffe.pack()
- 
-    # Funzione per prendere il numero di caffè da tastiera
-    def invio_n_caffe(event=None):
-        n_inserito = input_n_caffe.get()
-        try:
-            n = int(n_inserito)  # deve essere un numero intero di caffè, non ha senso "2.5 caffè"
-        except ValueError:
-            print("Errore: devi inserire un numero intero valido!")
-            return
-        if n <= 0:
-            print("Errore: il numero di caffè deve essere positivo!")
-            return
- 
-        global stato_cassa
-        stato_cassa = aggiungi_n_caffe(stato_cassa, n)
-        salva_stato(stato_cassa)
-        aggiorna_display()
-        input_n_caffe.delete(0, tk.END)
- 
-    input_n_caffe.bind('<Return>', invio_n_caffe)
-
     # CREAZIONE LABEL INSERIMENTO MANUALE
     scritta_inserimento = tk.Label(frame_pagina1, text="Donazioni", font=("Helvetica", 14, "bold"))
     scritta_inserimento.pack(pady=8)
