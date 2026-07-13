@@ -8,6 +8,12 @@ def aggiungi_caffe(stato):
     stato["caffe_venduti_totali"] += 1
     return stato
 
+def aggiungi_n_caffe(stato,n):
+    stato["cassa"]+=(0.3*n)
+    stato["caffe_venduti_oggi"]+=(1*n)
+    stato["caffe_venduti_totali"] += (1*n)
+    return stato
+
 #fa l'addizione tra la cassa e l'aumento dato in input
 def addizione(stato, aumento):
     stato["cassa"] += aumento
@@ -25,6 +31,16 @@ def trasferisci_a_cassaforte(stato, importo):
     if stato["cassa"] < 0:
         stato["cassa"] = 0.0  # corregge eventuali residui negativi trascurabili
     stato["cassaforte"] += importo
+    return stato, True
+
+def trasferisci_a_cassa(stato, importo):
+    EPSILON = 1e-9
+    if importo <= 0 or importo > stato["cassaforte"] + EPSILON:
+        return stato, False
+    stato["cassaforte"] -= importo
+    if stato["cassaforte"] < 0:
+        stato["cassaforte"] = 0.0  # corregge eventuali residui negativi trascurabili
+    stato["cassa"] += importo
     return stato, True
 
 def carica_stato(percorso="dati.json"):
