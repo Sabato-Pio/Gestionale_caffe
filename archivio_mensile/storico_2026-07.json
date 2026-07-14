@@ -1,0 +1,241 @@
+{
+    "mese": "2026-07",
+    "saldo_iniziale": {
+        "cassa": 10.000000000000002,
+        "cassaforte": 11.3
+    },
+    "operazioni": [
+        {
+            "data": "2026-07-14",
+            "ora": "09:36:56",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 13.3,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:36:56",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 13.6,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:36:57",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 13.9,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:36:57",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 14.2,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:37:11",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 14.5,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:37:11",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 14.8,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:37:12",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 15.1,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:37:12",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 15.4,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:37:12",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 15.7,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:37:12",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 16.0,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:38:38",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 16.3,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:38:39",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 16.6,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:38:39",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 16.9,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:38:40",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 17.2,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:38:40",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 17.5,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "09:38:42",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 17.8,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:03:57",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 19.0,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:03:58",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 19.3,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:03:58",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 19.6,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:03:58",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 19.9,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:03:58",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 20.2,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:03:58",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 20.5,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:03:58",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 20.8,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:03:59",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 21.1,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:03:59",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 21.4,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:03:59",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 21.7,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:03:59",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 22.0,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:04:00",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 22.3,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-14",
+            "ora": "10:04:00",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 22.6,
+            "cassaforte_dopo": 11.3
+        }
+    ]
+}
