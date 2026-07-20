@@ -236,6 +236,134 @@
             "descrizione": "Venduto 1 caffè (+0.30€)",
             "cassa_dopo": 22.6,
             "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:19:25",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 22.9,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:19:26",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 23.2,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:25:52",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 23.5,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:25:53",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 23.8,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:25:54",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 24.1,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:25:58",
+            "tipo": "trasferimento_a_cassaforte",
+            "descrizione": "Trasferiti 20.00€ dalla cassa alla cassaforte",
+            "cassa_dopo": 4.1,
+            "cassaforte_dopo": 31.3
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:26:10",
+            "tipo": "prelievo",
+            "descrizione": "Prelevati 1.30€ dalla cassaforte",
+            "cassa_dopo": 4.1,
+            "cassaforte_dopo": 30.0
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:26:14",
+            "tipo": "annullamento",
+            "descrizione": "Annullata l'ultima operazione (ripristinati cassa 4.10€ e cassaforte 31.30€)",
+            "cassa_dopo": 4.1,
+            "cassaforte_dopo": 31.3
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:26:15",
+            "tipo": "annullamento",
+            "descrizione": "Annullata l'ultima operazione (ripristinati cassa 24.10€ e cassaforte 11.30€)",
+            "cassa_dopo": 24.1,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:26:25",
+            "tipo": "trasferimento_a_cassaforte",
+            "descrizione": "Trasferiti 20.00€ dalla cassa alla cassaforte",
+            "cassa_dopo": 4.1,
+            "cassaforte_dopo": 31.3
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:26:29",
+            "tipo": "prelievo",
+            "descrizione": "Prelevati 1.30€ dalla cassaforte",
+            "cassa_dopo": 4.1,
+            "cassaforte_dopo": 30.0
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:26:31",
+            "tipo": "annullamento",
+            "descrizione": "Annullata l'ultima operazione (ripristinati cassa 4.10€ e cassaforte 31.30€)",
+            "cassa_dopo": 4.1,
+            "cassaforte_dopo": 31.3
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:26:31",
+            "tipo": "annullamento",
+            "descrizione": "Annullata l'ultima operazione (ripristinati cassa 24.10€ e cassaforte 11.30€)",
+            "cassa_dopo": 24.1,
+            "cassaforte_dopo": 11.3
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:26:38",
+            "tipo": "prelievo",
+            "descrizione": "Prelevati 1.30€ dalla cassaforte",
+            "cassa_dopo": 24.1,
+            "cassaforte_dopo": 10.0
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:26:43",
+            "tipo": "trasferimento_a_cassa",
+            "descrizione": "Trasferiti 10.00€ dalla cassaforte alla cassa",
+            "cassa_dopo": 34.1,
+            "cassaforte_dopo": 0.0
+        },
+        {
+            "data": "2026-07-20",
+            "ora": "09:26:48",
+            "tipo": "trasferimento_a_cassaforte",
+            "descrizione": "Trasferiti 30.00€ dalla cassa alla cassaforte",
+            "cassa_dopo": 4.1,
+            "cassaforte_dopo": 30.0
         }
     ]
 }

@@ -1,3 +1,4 @@
+import copy
 import json
 import os
 from datetime import date, datetime
@@ -57,6 +58,45 @@ def registra_operazione(stato, tipo, descrizione):
 
     return stato
 
+# --- FUNZIONI PER L'UNDO ("ctrl+z") ---
+# L'idea è semplice: prima di ogni operazione che modifica lo stato,
+# l'interfaccia salva una "fotografia" (snapshot) di com'era lo stato PRIMA.
+# Se poi si sbaglia qualcosa, con annulla_ultima_operazione() si torna
+# indietro a quella fotografia, sia per la cassa che per la cassaforte.
+# Il log NON viene mai cancellato: l'annullamento stesso viene scritto nel
+# file storico come una normale operazione (tipo "annullamento"), così resta
+# tutto tracciato, comprese le volte in cui ci si è corretti.
+
+def crea_snapshot(stato):
+    """Crea una copia indipendente dello stato attuale, da mettere da parte
+    PRIMA di ogni operazione. Serve come 'punto di salvataggio' per l'undo."""
+    return copy.deepcopy(stato)
+
+
+def annulla_ultima_operazione(cronologia):
+    """
+    Riporta lo stato a com'era prima dell'ultima operazione fatta.
+    'cronologia' è una lista di snapshot dello stato accumulati
+    dall'interfaccia (uno per ogni operazione riuscita, tenendo solo le
+    ultime N, dove N è deciso lato interfaccia).
+    L'annullamento viene registrato nel log come una nuova operazione,
+    non cancella nulla dallo storico.
+    Restituisce (stato_ripristinato, True) se c'era qualcosa da annullare,
+    altrimenti (None, False).
+    """
+    if not cronologia:
+        return None, False
+
+    stato_precedente = cronologia.pop()
+    registra_operazione(
+        stato_precedente,
+        "annullamento",
+        f"Annullata l'ultima operazione (ripristinati cassa {stato_precedente['cassa']:.2f}€ "
+        f"e cassaforte {stato_precedente['cassaforte']:.2f}€)"
+    )
+    return stato_precedente, True
+
+
 #aggiunge 30 cent in cassa e aggiorna i contatori dei caffè (oggi + mese + totale)
 def aggiungi_caffe(stato):
     stato["cassa"]+=0.3
@@ -104,6 +144,20 @@ def trasferisci_a_cassa(stato, importo):
         stato["cassaforte"] = 0.0  # corregge eventuali residui negativi trascurabili
     stato["cassa"] += importo
     registra_operazione(stato, "trasferimento_a_cassa", f"Trasferiti {importo:.2f}€ dalla cassaforte alla cassa")
+    return stato, True
+
+# toglie un importo dalla cassaforte senza che finisca da nessuna parte (es.
+# un prelievo per una spesa): i soldi escono e basta, l'operazione viene
+# comunque registrata nel log come le altre.
+# restituisce vero se buono, falso se non buono (stessa logica dei trasferimenti).
+def preleva_da_cassaforte(stato, importo):
+    EPSILON = 1e-9
+    if importo <= 0 or importo > stato["cassaforte"] + EPSILON:
+        return stato, False
+    stato["cassaforte"] -= importo
+    if stato["cassaforte"] < 0:
+        stato["cassaforte"] = 0.0  # corregge eventuali residui negativi trascurabili
+    registra_operazione(stato, "prelievo", f"Prelevati {importo:.2f}€ dalla cassaforte")
     return stato, True
 
 # Se è iniziato un nuovo mese rispetto all'ultima operazione registrata:

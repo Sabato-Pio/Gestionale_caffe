@@ -1,11 +1,25 @@
 import tkinter as tk
-from gestione_caffe import aggiungi_caffe, addizione, trasferisci_a_cassaforte, carica_stato, salva_stato,trasferisci_a_cassa, aggiungi_n_caffe
-from gestione_caffe import aggiungi_caffe, addizione, trasferisci_a_cassaforte, carica_stato, salva_stato,trasferisci_a_cassa, aggiungi_n_caffe
+from gestione_caffe import (
+    aggiungi_caffe,
+    aggiungi_n_caffe,
+    addizione,
+    trasferisci_a_cassaforte,
+    trasferisci_a_cassa,
+    preleva_da_cassaforte,
+    carica_stato,
+    salva_stato,
+    crea_snapshot,
+    annulla_ultima_operazione,
+)
+
+# Numero massimo di operazioni "annullabili" con il bottone di undo.
+MAX_CRONOLOGIA = 2
 
 
 def avvia_gui():
-    global stato_cassa
+    global stato_cassa, cronologia_stati
     stato_cassa = carica_stato()  # carica (o crea) dati.json all'avvio
+    cronologia_stati = []  # cronologia degli stati precedenti, per l'undo (si azzera ad ogni avvio)
 
     finestra = tk.Tk()
     finestra.title("Gestione caffè di MR.S")
@@ -34,9 +48,17 @@ def avvia_gui():
 
     aggiorna_display()
 
+    # mette da parte una fotografia dello stato attuale PRIMA di un'operazione,
+    # così se serve annullare (undo) si può tornare indietro a questo punto
+    def salva_snapshot():
+        cronologia_stati.append(crea_snapshot(stato_cassa))
+        if len(cronologia_stati) > MAX_CRONOLOGIA:
+            cronologia_stati.pop(0)
+
     # funzione per il bottone per il caffe
     def premi_bottone():
         global stato_cassa
+        salva_snapshot()
         stato_cassa = aggiungi_caffe(stato_cassa)
         salva_stato(stato_cassa)  # salviamo subito su file
         aggiorna_display()
@@ -44,6 +66,7 @@ def avvia_gui():
     # Funzione per l'importo manuale
     def importo_manuale(soldi_inseriti):
         global stato_cassa
+        salva_snapshot()
         stato_cassa = addizione(stato_cassa, soldi_inseriti)  # tocca solo la cassa
         salva_stato(stato_cassa)
         aggiorna_display()
@@ -80,6 +103,7 @@ def avvia_gui():
             return
  
         global stato_cassa
+        salva_snapshot()
         stato_cassa = aggiungi_n_caffe(stato_cassa, n)
         salva_stato(stato_cassa)
         aggiorna_display()
@@ -119,6 +143,17 @@ def avvia_gui():
             text=f"Saldo cassaforte: {soldi_cassaforte:.2f}€ | Cassa rimasta: {soldi_cassa:.2f}€"
         )
 
+    # ANNULLA ULTIMA OPERAZIONE (una specie di "ctrl+z" per cassa e cassaforte)
+    def annulla_operazione():
+        global stato_cassa
+        stato_ripristinato, riuscito = annulla_ultima_operazione(cronologia_stati)
+        if not riuscito:
+            print("Errore: non c'è nessuna operazione da annullare!")
+            return
+        stato_cassa = stato_ripristinato
+        salva_stato(stato_cassa)
+        aggiorna_display()
+        get_saldo()  # aggiorna anche il saldo cassaforte, se è visibile
 
     # TRASFERIMENTO A CASSAFORTE TRAMITE LABEL
     # LABEL PER TRASFERIRE A CASSAFORTE
@@ -136,8 +171,10 @@ def avvia_gui():
             return
 
         global stato_cassa
+        salva_snapshot()
         stato_cassa, riuscito = trasferisci_a_cassaforte(stato_cassa, soldi_inseriti)
         if not riuscito:
+            cronologia_stati.pop()  # operazione non riuscita, togliamo lo snapshot inutile
             print("Errore: importo non valido o superiore ai soldi disponibili in cassa!")
             return
 
@@ -162,9 +199,11 @@ def avvia_gui():
             return
 
         global stato_cassa
+        salva_snapshot()
         stato_cassa, riuscito = trasferisci_a_cassa(stato_cassa, soldi_inseriti)
         if not riuscito:
-            print("Errore: importo non valido o superiore ai soldi disponibili in cassa!")
+            cronologia_stati.pop()  # operazione non riuscita, togliamo lo snapshot inutile
+            print("Errore: importo non valido o superiore ai soldi disponibili in cassaforte!")
             return
 
         salva_stato(stato_cassa)
@@ -173,6 +212,36 @@ def avvia_gui():
         input_trasferisci_cassa.delete(0, tk.END)
 
     input_trasferisci_cassa.bind('<Return>', scambio_cassa)
+
+    # CREAZIONE LABEL PRELIEVO DALLA CASSAFORTE
+    scritta_prelievo = tk.Label(frame_pagina2, text="Preleva dalla cassaforte", font=("Helvetica", 14, "bold"))
+    scritta_prelievo.pack(pady=8)
+    input_prelievo = tk.Entry(frame_pagina2, width=15)
+    input_prelievo.pack()
+
+    # Funzione per prendere l'importo da prelevare da tastiera
+    def invio_prelievo(event=None):
+        importo_inserito = input_prelievo.get()
+        try:
+            soldi_inseriti = float(importo_inserito)
+        except ValueError:
+            print("Errore: devi inserire un importo numerico valido!")
+            return
+
+        global stato_cassa
+        salva_snapshot()
+        stato_cassa, riuscito = preleva_da_cassaforte(stato_cassa, soldi_inseriti)
+        if not riuscito:
+            cronologia_stati.pop()  # operazione non riuscita, togliamo lo snapshot inutile
+            print("Errore: importo non valido o superiore ai soldi disponibili in cassaforte!")
+            return
+
+        salva_stato(stato_cassa)
+        aggiorna_display()
+        get_saldo()
+        input_prelievo.delete(0, tk.END)
+
+    input_prelievo.bind('<Return>', invio_prelievo)
 
 # FUNZIONE PER ANDARE ALLA CASSAFORTE
     def vai_a_cassaforte():
@@ -195,6 +264,19 @@ def avvia_gui():
     )
     bottone_cassaforte.pack(pady=20)
 
+    # BOTTONE ANNULLA (pagina 1)
+    bottone_annulla = tk.Button(
+        frame_pagina1,
+        text="Annulla ultima operazione",
+        command=annulla_operazione,
+        bg="orange",
+        fg="white",
+        width=20,
+        height=2,
+        font=("Helvetica", 11, "bold")
+    )
+    bottone_annulla.pack(pady=10)
+
 
  # FUNZIONE PER LA HOME
     def vai_alla_home():
@@ -213,5 +295,18 @@ def avvia_gui():
         font=("Helvetica", 12, "bold")
         )
     bottone_home.pack(pady=20)
+
+    # BOTTONE ANNULLA (pagina 2)
+    bottone_annulla_2 = tk.Button(
+        frame_pagina2,
+        text="Annulla ultima operazione",
+        command=annulla_operazione,
+        bg="orange",
+        fg="white",
+        width=20,
+        height=2,
+        font=("Helvetica", 11, "bold")
+    )
+    bottone_annulla_2.pack(pady=10)
 
     finestra.mainloop()

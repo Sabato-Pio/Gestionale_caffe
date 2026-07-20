@@ -1,10 +1,10 @@
 {
-    "cassa": 22.60000000000003,
-    "cassaforte": 11.3,
-    "caffe_venduti_totali": 100,
-    "caffe_venduti_oggi": 13,
-    "ultima_data": "2026-07-14",
-    "caffe_venduti_mese": 13,
+    "cassa": 4.100000000000037,
+    "cassaforte": 30.0,
+    "caffe_venduti_totali": 105,
+    "caffe_venduti_oggi": 5,
+    "ultima_data": "2026-07-20",
+    "caffe_venduti_mese": 18,
     "saldo_inizio_mese": {
         "cassa": 18.70000000000002,
         "cassaforte": 11.3
