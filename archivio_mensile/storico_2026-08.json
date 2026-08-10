@@ -1,0 +1,25 @@
+{
+    "mese": "2026-08",
+    "saldo_iniziale": {
+        "cassa": 4.100000000000037,
+        "cassaforte": 30.0
+    },
+    "operazioni": [
+        {
+            "data": "2026-08-10",
+            "ora": "18:26:19",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 4.4,
+            "cassaforte_dopo": 30.0
+        },
+        {
+            "data": "2026-08-10",
+            "ora": "18:26:19",
+            "tipo": "vendita_caffe",
+            "descrizione": "Venduto 1 caffè (+0.30€)",
+            "cassa_dopo": 4.7,
+            "cassaforte_dopo": 30.0
+        }
+    ]
+}

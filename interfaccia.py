@@ -1,4 +1,4 @@
-import tkinter as tk
+import customtkinter as ctk
 from gestione_caffe import (
     aggiungi_caffe,
     aggiungi_n_caffe,
@@ -15,36 +15,103 @@ from gestione_caffe import (
 # Numero massimo di operazioni "annullabili" con il bottone di undo.
 MAX_CRONOLOGIA = 2
 
+# --- PALETTE "COFFEE SHOP" ---
+# marrone caffè per i bottoni principali, crema per lo sfondo, ambra per
+# l'undo: un tocco un po' più curato senza esagerare con i colori.
+COLORE_SFONDO = "#F5EFE6"
+COLORE_SIDEBAR = "#3E2723"
+COLORE_CARD = "#FFFFFF"
+COLORE_TESTO = "#3E2723"
+COLORE_TESTO_CHIARO = "#F5EFE6"
+COLORE_BOTTONE = "#6F4E37"
+COLORE_BOTTONE_HOVER = "#5A3D2B"
+COLORE_ACCENTO = "#C9A227"
+COLORE_ACCENTO_HOVER = "#A9871E"
+COLORE_NAV = "#5D4037"
+COLORE_NAV_HOVER = "#4E342E"
+
+ctk.set_appearance_mode("light")
+
 
 def avvia_gui():
     global stato_cassa, cronologia_stati
     stato_cassa = carica_stato()  # carica (o crea) dati.json all'avvio
     cronologia_stati = []  # cronologia degli stati precedenti, per l'undo (si azzera ad ogni avvio)
 
-    finestra = tk.Tk()
+    finestra = ctk.CTk()
     finestra.title("Gestione caffè di MR.S")
-    finestra.geometry("720x500")
-    frame_pagina1 = tk.Frame(finestra)
-    frame_pagina1.pack(fill="both", expand=True)
+    finestra.geometry("950x650")
+    finestra.configure(fg_color=COLORE_SFONDO)
 
-    frame_pagina2 = tk.Frame(finestra, bg="grey")
+    # -----------------------------------------------------------------
+    # SIDEBAR: navigazione tra le pagine + bottone di undo (sempre visibile)
+    # -----------------------------------------------------------------
+    sidebar = ctk.CTkFrame(finestra, width=210, corner_radius=0, fg_color=COLORE_SIDEBAR)
+    sidebar.pack(side="left", fill="y")
+    sidebar.pack_propagate(False)  # non farla restringere in base al contenuto
 
-    testo_benvenuto = tk.Label(frame_pagina1, text="Benvenuto nel gestionale di MR.S!")
-    testo_benvenuto.pack(pady=20)  # aggiunge del margine
+    titolo_sidebar = ctk.CTkLabel(
+        sidebar, text="☕ MR.S", font=ctk.CTkFont(size=24, weight="bold"), text_color=COLORE_TESTO_CHIARO
+    )
+    titolo_sidebar.pack(pady=(30, 40))
 
-    # Display soldi e caffè, già con i valori caricati da dati.json
-    display_saldo = tk.Label(frame_pagina1, text="", font=("Arial", 12))
-    display_saldo.pack(pady=10)
+    # -----------------------------------------------------------------
+    # AREA PRINCIPALE: contiene le due pagine (cassa / cassaforte), una
+    # nascosta e una visibile alla volta, come nella versione precedente
+    # -----------------------------------------------------------------
+    area_principale = ctk.CTkFrame(finestra, fg_color=COLORE_SFONDO, corner_radius=0)
+    area_principale.pack(side="left", fill="both", expand=True, padx=24, pady=24)
 
-    # funzione unica per aggiornare il testo del display, così non lo ripetiamo ovunque
-    def aggiorna_display():
-        display_saldo.config(
-            text=(
-                f"Saldo: {stato_cassa['cassa']:.2f}€ | "
-                f"Caffè oggi: {stato_cassa['caffe_venduti_oggi']} | "
-                f"Totali: {stato_cassa['caffe_venduti_totali']}"
-            )
+    pagina_cassa = ctk.CTkFrame(area_principale, fg_color=COLORE_SFONDO)
+    pagina_cassaforte = ctk.CTkFrame(area_principale, fg_color=COLORE_SFONDO)
+    pagina_cassa.pack(fill="both", expand=True)
+
+    # -----------------------------------------------------------------
+    # Helper: crea una "card" con angoli arrotondati e un titolo, usata
+    # per raggruppare ogni funzionalità (vendita caffè, donazioni, ecc.)
+    # -----------------------------------------------------------------
+    def crea_card(padre, titolo):
+        card = ctk.CTkFrame(padre, corner_radius=18, fg_color=COLORE_CARD)
+        card.pack(fill="x", pady=(0, 16))
+        card.grid_columnconfigure(0, weight=1)
+
+        etichetta_titolo = ctk.CTkLabel(
+            card, text=titolo, font=ctk.CTkFont(size=15, weight="bold"), text_color=COLORE_TESTO
         )
+        etichetta_titolo.grid(row=0, column=0, columnspan=3, sticky="w", padx=18, pady=(16, 4))
+        return card
+
+    # ===================================================================
+    # PAGINA CASSA
+    # ===================================================================
+    titolo_pagina_cassa = ctk.CTkLabel(
+        pagina_cassa, text="Cassa", font=ctk.CTkFont(size=22, weight="bold"), text_color=COLORE_TESTO
+    )
+    titolo_pagina_cassa.pack(anchor="w", pady=(0, 16))
+
+    # --- Card riepilogo ---
+    card_riepilogo = crea_card(pagina_cassa, "Riepilogo")
+
+    ctk.CTkLabel(card_riepilogo, text="Saldo cassa", text_color=COLORE_TESTO, anchor="w").grid(
+        row=1, column=0, sticky="w", padx=18, pady=6)
+    valore_saldo = ctk.CTkLabel(card_riepilogo, text="", font=ctk.CTkFont(weight="bold"), text_color=COLORE_TESTO)
+    valore_saldo.grid(row=1, column=1, columnspan=2, sticky="e", padx=18, pady=6)
+
+    ctk.CTkLabel(card_riepilogo, text="Caffè venduti oggi", text_color=COLORE_TESTO, anchor="w").grid(
+        row=2, column=0, sticky="w", padx=18, pady=6)
+    valore_oggi = ctk.CTkLabel(card_riepilogo, text="", font=ctk.CTkFont(weight="bold"), text_color=COLORE_TESTO)
+    valore_oggi.grid(row=2, column=1, columnspan=2, sticky="e", padx=18, pady=6)
+
+    ctk.CTkLabel(card_riepilogo, text="Caffè venduti totali", text_color=COLORE_TESTO, anchor="w").grid(
+        row=3, column=0, sticky="w", padx=18, pady=(6, 18))
+    valore_totali = ctk.CTkLabel(card_riepilogo, text="", font=ctk.CTkFont(weight="bold"), text_color=COLORE_TESTO)
+    valore_totali.grid(row=3, column=1, columnspan=2, sticky="e", padx=18, pady=(6, 18))
+
+    # funzione unica per aggiornare tutte le etichette del riepilogo cassa
+    def aggiorna_display():
+        valore_saldo.configure(text=f"{stato_cassa['cassa']:.2f} €")
+        valore_oggi.configure(text=str(stato_cassa['caffe_venduti_oggi']))
+        valore_totali.configure(text=str(stato_cassa['caffe_venduti_totali']))
 
     aggiorna_display()
 
@@ -55,7 +122,12 @@ def avvia_gui():
         if len(cronologia_stati) > MAX_CRONOLOGIA:
             cronologia_stati.pop(0)
 
-    # funzione per il bottone per il caffe
+    # --- Card vendita caffè ---
+    card_vendita = crea_card(pagina_cassa, "Vendita caffè")
+
+    ctk.CTkLabel(card_vendita, text="Un caffè alla volta (0.30€)", text_color=COLORE_TESTO, anchor="w").grid(
+        row=1, column=0, sticky="w", padx=18, pady=10)
+
     def premi_bottone():
         global stato_cassa
         salva_snapshot()
@@ -63,34 +135,17 @@ def avvia_gui():
         salva_stato(stato_cassa)  # salviamo subito su file
         aggiorna_display()
 
-    # Funzione per l'importo manuale
-    def importo_manuale(soldi_inseriti):
-        global stato_cassa
-        salva_snapshot()
-        stato_cassa = addizione(stato_cassa, soldi_inseriti)  # tocca solo la cassa
-        salva_stato(stato_cassa)
-        aggiorna_display()
+    ctk.CTkButton(
+        card_vendita, text="+1 ☕", width=90, corner_radius=10,
+        fg_color=COLORE_BOTTONE, hover_color=COLORE_BOTTONE_HOVER, command=premi_bottone
+    ).grid(row=1, column=1, columnspan=2, sticky="e", padx=18, pady=10)
 
-    # CREAZIONE BOTTONE
-    bottone_caffe = tk.Button(
-        frame_pagina1,
-        text="+1 Caffè(30cent)",
-        command=premi_bottone,
-        bg="red",
-        fg="white",
-        width=13,
-        height=2,
-        font=("Helvetica", 12, "bold")
-        )
-    bottone_caffe.pack(pady=20)
+    ctk.CTkLabel(card_vendita, text="Più caffè insieme (quantità)", text_color=COLORE_TESTO, anchor="w").grid(
+        row=2, column=0, sticky="w", padx=18, pady=(6, 18))
 
-        # CREAZIONE LABEL INSERIMENTO N CAFFÈ
-    scritta_n_caffe = tk.Label(frame_pagina1, text="Aggiungi più caffè insieme", font=("Helvetica", 14, "bold"))
-    scritta_n_caffe.pack(pady=8)
-    input_n_caffe = tk.Entry(frame_pagina1, width=15)
-    input_n_caffe.pack()
- 
-    # Funzione per prendere il numero di caffè da tastiera
+    input_n_caffe = ctk.CTkEntry(card_vendita, width=90, corner_radius=10, placeholder_text="es. 3")
+    input_n_caffe.grid(row=2, column=1, sticky="e", padx=(0, 8), pady=(6, 18))
+
     def invio_n_caffe(event=None):
         n_inserito = input_n_caffe.get()
         try:
@@ -101,66 +156,62 @@ def avvia_gui():
         if n <= 0:
             print("Errore: il numero di caffè deve essere positivo!")
             return
- 
+
         global stato_cassa
         salva_snapshot()
         stato_cassa = aggiungi_n_caffe(stato_cassa, n)
         salva_stato(stato_cassa)
         aggiorna_display()
-        input_n_caffe.delete(0, tk.END)
- 
+        input_n_caffe.delete(0, "end")
+
     input_n_caffe.bind('<Return>', invio_n_caffe)
 
-    # CREAZIONE LABEL INSERIMENTO MANUALE
-    scritta_inserimento = tk.Label(frame_pagina1, text="Donazioni", font=("Helvetica", 14, "bold"))
-    scritta_inserimento.pack(pady=8)
-    input_importo = tk.Entry(frame_pagina1, width=15)
-    input_importo.pack()
+    ctk.CTkButton(
+        card_vendita, text="Conferma", width=90, corner_radius=10,
+        fg_color=COLORE_BOTTONE, hover_color=COLORE_BOTTONE_HOVER, command=invio_n_caffe
+    ).grid(row=2, column=2, sticky="e", padx=18, pady=(6, 18))
 
-    # Funzione per prendere l'importo da tastiera
-    def invio_importo(event=None):
-        importo_inserito = input_importo.get()  # importo=input
-        try:
-            soldi_inseriti = float(importo_inserito)  # conversione input da stringa a float
-        except ValueError:
-            print("Errore: devi inserire un importo numerico valido!")  # se non è un numero stampa
-            return
-        importo_manuale(soldi_inseriti)  # chiamiamo la funzione che aggiorna il display e la cassa
-        input_importo.delete(0, tk.END)  # cancella l'input dalla barra
+    # --- Card donazioni ---
+    card_donazioni = crea_card(pagina_cassa, "Donazioni")
 
-    input_importo.bind('<Return>', invio_importo)  # esegui invio_importo solo se preme invio
+    ctk.CTkLabel(card_donazioni, text="Importo (€)", text_color=COLORE_TESTO, anchor="w").grid(
+        row=1, column=0, sticky="w", padx=18, pady=(10, 18))
 
-    # LABEL SOLDI CASSA E CASSAFORTE
-    display_cassaforte = tk.Label(frame_pagina2, text="Saldo cassaforte: 0.00 €", font=("Arial", 12), bg="red")
-    display_cassaforte.pack(pady=10)
+    input_importo = ctk.CTkEntry(card_donazioni, width=90, corner_radius=10, placeholder_text="es. 5.00")
+    input_importo.grid(row=1, column=1, sticky="e", padx=(0, 8), pady=(10, 18))
 
-    # FUNZIONE PER AGGIORNARE SALDO
-    def get_saldo():
-        global stato_cassa  # prendiamo lo stato cassa
-        soldi_cassaforte = stato_cassa["cassaforte"]
-        soldi_cassa = stato_cassa["cassa"]
-        display_cassaforte.config(
-            text=f"Saldo cassaforte: {soldi_cassaforte:.2f}€ | Cassa rimasta: {soldi_cassa:.2f}€"
-        )
-
-    # ANNULLA ULTIMA OPERAZIONE (una specie di "ctrl+z" per cassa e cassaforte)
-    def annulla_operazione():
+    def importo_manuale(soldi_inseriti):
         global stato_cassa
-        stato_ripristinato, riuscito = annulla_ultima_operazione(cronologia_stati)
-        if not riuscito:
-            print("Errore: non c'è nessuna operazione da annullare!")
-            return
-        stato_cassa = stato_ripristinato
+        salva_snapshot()
+        stato_cassa = addizione(stato_cassa, soldi_inseriti)  # tocca solo la cassa
         salva_stato(stato_cassa)
         aggiorna_display()
-        get_saldo()  # aggiorna anche il saldo cassaforte, se è visibile
 
-    # TRASFERIMENTO A CASSAFORTE TRAMITE LABEL
-    # LABEL PER TRASFERIRE A CASSAFORTE
-    label_trasferimento = tk.Label(frame_pagina1, text="Trasferimento a cassaforte", font=("Helvetica", 14, "bold"))
-    label_trasferimento.pack(pady=8)
-    input_trasferisci = tk.Entry(frame_pagina1, width=15)
-    input_trasferisci.pack()
+    def invio_importo(event=None):
+        importo_inserito = input_importo.get()
+        try:
+            soldi_inseriti = float(importo_inserito)
+        except ValueError:
+            print("Errore: devi inserire un importo numerico valido!")
+            return
+        importo_manuale(soldi_inseriti)
+        input_importo.delete(0, "end")
+
+    input_importo.bind('<Return>', invio_importo)
+
+    ctk.CTkButton(
+        card_donazioni, text="Aggiungi", width=90, corner_radius=10,
+        fg_color=COLORE_BOTTONE, hover_color=COLORE_BOTTONE_HOVER, command=invio_importo
+    ).grid(row=1, column=2, sticky="e", padx=18, pady=(10, 18))
+
+    # --- Card trasferimento a cassaforte ---
+    card_trasferimento = crea_card(pagina_cassa, "Trasferisci alla cassaforte")
+
+    ctk.CTkLabel(card_trasferimento, text="Importo (€)", text_color=COLORE_TESTO, anchor="w").grid(
+        row=1, column=0, sticky="w", padx=18, pady=(10, 18))
+
+    input_trasferisci = ctk.CTkEntry(card_trasferimento, width=90, corner_radius=10, placeholder_text="es. 10.00")
+    input_trasferisci.grid(row=1, column=1, sticky="e", padx=(0, 8), pady=(10, 18))
 
     def scambio_cassaforte(event=None):
         importo_inserito = input_trasferisci.get()
@@ -180,15 +231,48 @@ def avvia_gui():
 
         salva_stato(stato_cassa)
         aggiorna_display()
-        input_trasferisci.delete(0, tk.END)
+        input_trasferisci.delete(0, "end")
 
     input_trasferisci.bind('<Return>', scambio_cassaforte)
-    
-# TRASFERIMENTO DALLA CASSAFORTE ALLA CASSA
-    label_trasferimento = tk.Label(frame_pagina2, text="Trasferimento a cassa", font=("Helvetica", 14, "bold"))
-    label_trasferimento.pack(pady=8)
-    input_trasferisci_cassa = tk.Entry(frame_pagina2, width=15)
-    input_trasferisci_cassa.pack()
+
+    ctk.CTkButton(
+        card_trasferimento, text="Trasferisci", width=90, corner_radius=10,
+        fg_color=COLORE_BOTTONE, hover_color=COLORE_BOTTONE_HOVER, command=scambio_cassaforte
+    ).grid(row=1, column=2, sticky="e", padx=18, pady=(10, 18))
+
+    # ===================================================================
+    # PAGINA CASSAFORTE
+    # ===================================================================
+    titolo_pagina_cassaforte = ctk.CTkLabel(
+        pagina_cassaforte, text="Cassaforte", font=ctk.CTkFont(size=22, weight="bold"), text_color=COLORE_TESTO
+    )
+    titolo_pagina_cassaforte.pack(anchor="w", pady=(0, 16))
+
+    # --- Card riepilogo cassaforte ---
+    card_riepilogo_cassaforte = crea_card(pagina_cassaforte, "Riepilogo")
+
+    ctk.CTkLabel(card_riepilogo_cassaforte, text="Saldo cassaforte", text_color=COLORE_TESTO, anchor="w").grid(
+        row=1, column=0, sticky="w", padx=18, pady=6)
+    valore_saldo_cassaforte = ctk.CTkLabel(card_riepilogo_cassaforte, text="", font=ctk.CTkFont(weight="bold"), text_color=COLORE_TESTO)
+    valore_saldo_cassaforte.grid(row=1, column=1, columnspan=2, sticky="e", padx=18, pady=6)
+
+    ctk.CTkLabel(card_riepilogo_cassaforte, text="Cassa rimasta", text_color=COLORE_TESTO, anchor="w").grid(
+        row=2, column=0, sticky="w", padx=18, pady=(6, 18))
+    valore_cassa_rimasta = ctk.CTkLabel(card_riepilogo_cassaforte, text="", font=ctk.CTkFont(weight="bold"), text_color=COLORE_TESTO)
+    valore_cassa_rimasta.grid(row=2, column=1, columnspan=2, sticky="e", padx=18, pady=(6, 18))
+
+    def get_saldo():
+        valore_saldo_cassaforte.configure(text=f"{stato_cassa['cassaforte']:.2f} €")
+        valore_cassa_rimasta.configure(text=f"{stato_cassa['cassa']:.2f} €")
+
+    # --- Card trasferimento a cassa ---
+    card_trasferimento_cassa = crea_card(pagina_cassaforte, "Trasferisci alla cassa")
+
+    ctk.CTkLabel(card_trasferimento_cassa, text="Importo (€)", text_color=COLORE_TESTO, anchor="w").grid(
+        row=1, column=0, sticky="w", padx=18, pady=(10, 18))
+
+    input_trasferisci_cassa = ctk.CTkEntry(card_trasferimento_cassa, width=90, corner_radius=10, placeholder_text="es. 10.00")
+    input_trasferisci_cassa.grid(row=1, column=1, sticky="e", padx=(0, 8), pady=(10, 18))
 
     def scambio_cassa(event=None):
         importo_inserito = input_trasferisci_cassa.get()
@@ -209,17 +293,24 @@ def avvia_gui():
         salva_stato(stato_cassa)
         aggiorna_display()
         get_saldo()
-        input_trasferisci_cassa.delete(0, tk.END)
+        input_trasferisci_cassa.delete(0, "end")
 
     input_trasferisci_cassa.bind('<Return>', scambio_cassa)
 
-    # CREAZIONE LABEL PRELIEVO DALLA CASSAFORTE
-    scritta_prelievo = tk.Label(frame_pagina2, text="Preleva dalla cassaforte", font=("Helvetica", 14, "bold"))
-    scritta_prelievo.pack(pady=8)
-    input_prelievo = tk.Entry(frame_pagina2, width=15)
-    input_prelievo.pack()
+    ctk.CTkButton(
+        card_trasferimento_cassa, text="Trasferisci", width=90, corner_radius=10,
+        fg_color=COLORE_BOTTONE, hover_color=COLORE_BOTTONE_HOVER, command=scambio_cassa
+    ).grid(row=1, column=2, sticky="e", padx=18, pady=(10, 18))
 
-    # Funzione per prendere l'importo da prelevare da tastiera
+    # --- Card prelievo dalla cassaforte ---
+    card_prelievo = crea_card(pagina_cassaforte, "Preleva dalla cassaforte")
+
+    ctk.CTkLabel(card_prelievo, text="Importo (€)", text_color=COLORE_TESTO, anchor="w").grid(
+        row=1, column=0, sticky="w", padx=18, pady=(10, 18))
+
+    input_prelievo = ctk.CTkEntry(card_prelievo, width=90, corner_radius=10, placeholder_text="es. 5.00")
+    input_prelievo.grid(row=1, column=1, sticky="e", padx=(0, 8), pady=(10, 18))
+
     def invio_prelievo(event=None):
         importo_inserito = input_prelievo.get()
         try:
@@ -239,74 +330,58 @@ def avvia_gui():
         salva_stato(stato_cassa)
         aggiorna_display()
         get_saldo()
-        input_prelievo.delete(0, tk.END)
+        input_prelievo.delete(0, "end")
 
     input_prelievo.bind('<Return>', invio_prelievo)
 
-# FUNZIONE PER ANDARE ALLA CASSAFORTE
+    ctk.CTkButton(
+        card_prelievo, text="Preleva", width=90, corner_radius=10,
+        fg_color=COLORE_BOTTONE, hover_color=COLORE_BOTTONE_HOVER, command=invio_prelievo
+    ).grid(row=1, column=2, sticky="e", padx=18, pady=(10, 18))
+
+    # ===================================================================
+    # NAVIGAZIONE (bottoni nella sidebar)
+    # ===================================================================
+    def vai_a_cassa():
+        pagina_cassaforte.pack_forget()
+        pagina_cassa.pack(fill="both", expand=True)
+        aggiorna_display()
+
     def vai_a_cassaforte():
-        # Nasconde il frame della prima pagina
-        frame_pagina1.pack_forget()
-        # Mostra il frame della seconda pagina
-        frame_pagina2.pack(fill="both", expand=True)
-        get_saldo()  # Aggiorniamo il saldo della cassaforte
+        pagina_cassa.pack_forget()
+        pagina_cassaforte.pack(fill="both", expand=True)
+        get_saldo()
 
-    # CREAZIONE BOTTONE CASSAFORTE
-    bottone_cassaforte = tk.Button(
-        frame_pagina1,
-        text="Vai a cassaforte",
-        command=vai_a_cassaforte,
-        bg="red",
-        fg="white",
-        width=13,
-        height=2,
-        font=("Helvetica", 12, "bold")
-    )
-    bottone_cassaforte.pack(pady=20)
+    ctk.CTkButton(
+        sidebar, text="🏠  Cassa", command=vai_a_cassa,
+        fg_color=COLORE_NAV, hover_color=COLORE_NAV_HOVER,
+        corner_radius=10, width=170, height=40, anchor="w"
+    ).pack(pady=6, padx=20)
 
-    # BOTTONE ANNULLA (pagina 1)
-    bottone_annulla = tk.Button(
-        frame_pagina1,
-        text="Annulla ultima operazione",
-        command=annulla_operazione,
-        bg="orange",
-        fg="white",
-        width=20,
-        height=2,
-        font=("Helvetica", 11, "bold")
-    )
-    bottone_annulla.pack(pady=10)
+    ctk.CTkButton(
+        sidebar, text="🔒  Cassaforte", command=vai_a_cassaforte,
+        fg_color=COLORE_NAV, hover_color=COLORE_NAV_HOVER,
+        corner_radius=10, width=170, height=40, anchor="w"
+    ).pack(pady=6, padx=20)
 
+    # ===================================================================
+    # ANNULLA ULTIMA OPERAZIONE (bottone di undo, sempre visibile in sidebar)
+    # ===================================================================
+    def annulla_operazione():
+        global stato_cassa
+        stato_ripristinato, riuscito = annulla_ultima_operazione(cronologia_stati)
+        if not riuscito:
+            print("Errore: non c'è nessuna operazione da annullare!")
+            return
+        stato_cassa = stato_ripristinato
+        salva_stato(stato_cassa)
+        aggiorna_display()
+        get_saldo()  # aggiorna anche il saldo cassaforte, se è già stato mostrato
 
- # FUNZIONE PER LA HOME
-    def vai_alla_home():
-        frame_pagina2.pack_forget()
-        frame_pagina1.pack(fill="both", expand=True)
-
-    # BOTTONE PER TORNARE ALLA HOME
-    bottone_home = tk.Button(
-        frame_pagina2,
-        text="Torna alla home",
-        command=vai_alla_home,
-        bg="red",
-        fg="white",
-        width=13,
-        height=2,
-        font=("Helvetica", 12, "bold")
-        )
-    bottone_home.pack(pady=20)
-
-    # BOTTONE ANNULLA (pagina 2)
-    bottone_annulla_2 = tk.Button(
-        frame_pagina2,
-        text="Annulla ultima operazione",
-        command=annulla_operazione,
-        bg="orange",
-        fg="white",
-        width=20,
-        height=2,
-        font=("Helvetica", 11, "bold")
-    )
-    bottone_annulla_2.pack(pady=10)
+    ctk.CTkButton(
+        sidebar, text="↩  Annulla ultima\n     operazione", command=annulla_operazione,
+        fg_color=COLORE_ACCENTO, hover_color=COLORE_ACCENTO_HOVER, text_color=COLORE_TESTO,
+        corner_radius=10, width=170, height=50, anchor="w", font=ctk.CTkFont(size=12)
+    ).pack(side="bottom", pady=30, padx=20)
 
     finestra.mainloop()
